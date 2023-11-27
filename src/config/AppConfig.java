@@ -1,0 +1,33 @@
+package config;
+
+import db.DBConnection;
+import dto.MemberDto;
+import repository.MemberRepository;
+import service.MemberService;
+import ui.BoardFrame;
+import ui.JoinFrame;
+import ui.LoginFrame;
+
+import static db.DBConnection.*;
+
+public class AppConfig {
+
+    // About Member
+    public LoginFrame loginFrame(){
+        return new LoginFrame(memberService());
+    }
+
+    public JoinFrame joinFrame(){
+       return new JoinFrame(memberService());
+    }
+
+    public BoardFrame boardFrame(MemberDto memberDto) {return new BoardFrame(memberDto, memberService());}
+    public MemberService memberService(){
+      return new MemberService(memberRepository());
+   }
+
+    public MemberRepository memberRepository(){
+        return new MemberRepository(getDbConnection());
+   }
+
+}
