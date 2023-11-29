@@ -27,9 +27,11 @@ public class MemberRepository {
           String psql = "select user_id from user where user_id = ?";
           pstmt = conn.prepareStatement(psql);
           pstmt.setString(1, userId);
+          conn.setAutoCommit(false);
 
           rs = pstmt.executeQuery();
 
+          conn.commit();
           // 이미 중복 ID 있을 경우 false 반환!
           if(rs.next()) return false;
           else return true;
@@ -46,8 +48,11 @@ public class MemberRepository {
 
             pstmt.setString(1, willBeJoinedMember.getUserId());
             pstmt.setString(2, willBeJoinedMember.getPassWord());
+            conn.setAutoCommit(false);
 
             pstmt.executeUpdate();
+
+            conn.commit();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new SQLException("내부 서버 에러!");
@@ -63,6 +68,7 @@ public class MemberRepository {
             pstmt = conn.prepareStatement(psql, PreparedStatement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, willBeLoggedInMember.getUserId());
             pstmt.setString(2, willBeLoggedInMember.getPassWord());
+            conn.setAutoCommit(false);
 
             rs = pstmt.executeQuery();
 
@@ -72,6 +78,7 @@ public class MemberRepository {
                 String userId = rs.getString(2);
                 String password = rs.getString(3);
 
+                conn.commit();
                 return new MemberDto(id, userId, password);
             }
 
@@ -99,8 +106,10 @@ public class MemberRepository {
 
             pstmt.setString(1, newPassword);
             pstmt.setInt(2, loggedInMember.getId());
+            conn.setAutoCommit(false);
 
             pstmt.executeUpdate();
+            conn.commit();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new SQLException("내부 서버 에러!");
