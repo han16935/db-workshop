@@ -3,6 +3,7 @@ package config;
 import db.DBConnection;
 import dto.MemberDto;
 import repository.ArticleRepository;
+import repository.CommentRepository;
 import repository.MemberRepository;
 import service.ArticleService;
 import service.MemberService;
@@ -35,9 +36,8 @@ public class AppConfig {
    }
 
     public ArticleService articleService(){
-        return new ArticleService(articleRepository());
+        return new ArticleService(articleRepository(), commentRepository());
     }
-    public ArticleRepository articleRepository(){
-        return new ArticleRepository(getDbConnection());
-   }
+    public ArticleRepository articleRepository(){return new ArticleRepository(getDbConnection());}
+    public CommentRepository commentRepository(){return new CommentRepository(getDbConnection());}
 }

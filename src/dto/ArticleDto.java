@@ -1,28 +1,33 @@
 package dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ArticleDto {
     private int id;
-    private int boardId;
+    private int ownerId;
     private int writerId;
-    private String title;
     private String content;
+    private LocalDateTime createdDate;
+    private List<CommentDto> comments;
 
+    public ArticleDto(int id, int ownerId, int writerId, String content, LocalDateTime createdDate) {
+        this.id = id;
+        this.ownerId = ownerId;
+        this.writerId = writerId;
+        this.content = content;
+        this.createdDate = createdDate;
+    }
     public int getId() {
         return id;
     }
 
-    public int getBoardId() {
-        return boardId;
+    public int getOwnerId() {
+        return ownerId;
     }
 
     public int getWriterId() {
         return writerId;
-    }
-
-    public String getTitle() {
-        return title;
     }
 
     public String getContent() {
@@ -33,22 +38,19 @@ public class ArticleDto {
         return createdDate;
     }
 
-    private LocalDateTime createdDate;
-
-    public ArticleDto(int id, int boardId, int writerId, String title, String content, LocalDateTime createdDate) {
-        this.id = id;
-        this.boardId = boardId;
-        this.writerId = writerId;
-        this.title = title;
-        this.content = content;
-        this.createdDate = createdDate;
+    public void addComments(List<CommentDto> comments) {
+        this.comments = comments;
     }
 
-    public ArticleDto(int boardId, int writerId, String title, String content, LocalDateTime createdDate) {
-        this.boardId = boardId;
-        this.writerId = writerId;
-        this.title = title;
-        this.content = content;
-        this.createdDate = createdDate;
+    @Override
+    public String toString() {
+        return "ArticleDto{" +
+                "id=" + id +
+                ", ownerId=" + ownerId +
+                ", writerId=" + writerId +
+                ", content='" + content + '\'' +
+                ", createdDate=" + createdDate +
+                ", comments=" + comments +
+                '}';
     }
 }

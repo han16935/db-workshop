@@ -25,10 +25,9 @@ public class ArticleRepository {
         ResultSet rs = null;
         List<ArticleDto> result = new ArrayList<>();
         try{
-            String psql = "select Article.id, Article.board_id, Article.writer_id"
-                    + ", Article.title, Article.content "
+            String psql = "select Article.id, Article.owner_id, Article.writer_id, Article.content, Article.created_date "
                     + "from Article join follow "
-                    + "where Article.board_id = ? or follow.following_id = ? or follow.followed_id = ? "
+                    + "where Article.owner_id = ? or follow.following_id = ? or follow.followed_id = ? "
                     + "order by Article.created_date DESC";
 
             pstmt = conn.prepareStatement(psql);
@@ -38,14 +37,42 @@ public class ArticleRepository {
 
             rs = pstmt.executeQuery();
 
-            if(rs.next()){
+            while(rs.next()){
                int id = rs.getInt(1);
-               int boardId = rs.getInt(2);
+               int ownerId = rs.getInt(2);
                int writerId = rs.getInt(3);
-               String title = rs.getString(4);
-               String content = rs.getString(5);
-               LocalDateTime createdDate = rs.getTimestamp(6).toLocalDateTime();
-               result.add(new ArticleDto(id, boardId, writerId, title, content, createdDate));
+               String content = rs.getString(4);
+               LocalDateTime createdDate = rs.getTimestamp(5).toLocalDateTime();
+
+               result.add(new ArticleDto(id, ownerId, writerId, content, createdDate));
+            }
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<ArticleDto> getAllArticlesWithoutFollow(int boardOwnerId) {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<ArticleDto> result = new ArrayList<>();
+        try{
+            String psql = "select Article.id, Article.owner_id, Article.writer_id, Article.content, Article.created_date "
+                    + "from Article where Article.owner_id = ? order by Article.created_date DESC";
+
+            pstmt = conn.prepareStatement(psql);
+            pstmt.setInt(1, boardOwnerId);
+
+            rs = pstmt.executeQuery();
+
+            while(rs.next()){
+                int id = rs.getInt(1);
+                int ownerId = rs.getInt(2);
+                int writerId = rs.getInt(3);
+                String content = rs.getString(4);
+                LocalDateTime createdDate = rs.getTimestamp(5).toLocalDateTime();
+
+                result.add(new ArticleDto(id, ownerId, writerId, content, createdDate));
             }
             return result;
         } catch (SQLException e) {
