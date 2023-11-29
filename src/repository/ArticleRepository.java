@@ -25,11 +25,11 @@ public class ArticleRepository {
         ResultSet rs = null;
         List<ArticleDto> result = new ArrayList<>();
         try{
-            String psql = "select distinct Article.id, Article.board_id, Article.writer_id"
-                    + "Article.title, Article.content"
-                    + "from Article join follow"
-                    + "where Article.board_id = ? or follow.follower_id = ? or follow.followed_id = ?"
-                    + "order by Article.create_date DESC";
+            String psql = "select Article.id, Article.board_id, Article.writer_id"
+                    + ", Article.title, Article.content "
+                    + "from Article join follow "
+                    + "where Article.board_id = ? or follow.following_id = ? or follow.followed_id = ? "
+                    + "order by Article.created_date DESC";
 
             pstmt = conn.prepareStatement(psql);
             pstmt.setInt(1, boardOwnerId);

@@ -4,6 +4,7 @@ import dto.ArticleDto;
 import repository.ArticleRepository;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class ArticleService {
     private ArticleRepository articleRepository;
@@ -12,7 +13,7 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public ArticleDto[] getAllArticles(int boardOwnerId){
-        return (ArticleDto[]) articleRepository.getAllArticles(boardOwnerId).toArray();
+    public List<ArticleDto> getAllArticles(int boardOwnerId){
+        return articleRepository.getAllArticles(boardOwnerId);
     }
 }

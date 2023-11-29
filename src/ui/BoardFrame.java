@@ -73,16 +73,7 @@ public class BoardFrame extends JFrame {
         gbInsert(profilePanel, 2, 4, 3, 1);
 
         // Article Layout
-        articleListPanel = new JPanel(new BoxLayout(articleListPanel, BoxLayout.Y_AXIS));
-        ArticleDto[] allArticles = articleService.getAllArticles(boardOwner.getId());
-        for(ArticleDto articleDto : allArticles){
-             JPanel titlePanel = new JPanel(new FlowLayout());
-             JLabel title = new JLabel(articleDto.getTitle());
-             JButton addLikeBtn = new JButton("좋아요!");
 
-             JLabel content = new JLabel(articleDto.getContent());
-
-        }
         // Following Layout
 
         // Follower Layout
