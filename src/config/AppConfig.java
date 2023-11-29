@@ -2,7 +2,9 @@ package config;
 
 import db.DBConnection;
 import dto.MemberDto;
+import repository.ArticleRepository;
 import repository.MemberRepository;
+import service.ArticleService;
 import service.MemberService;
 import ui.BoardFrame;
 import ui.JoinFrame;
@@ -23,7 +25,7 @@ public class AppConfig {
        return new JoinFrame(memberService());
     }
 
-    public BoardFrame boardFrame(MemberDto loggedInUser, MemberDto boardUser) {return new BoardFrame(loggedInUser, boardUser, memberService());}
+    public BoardFrame boardFrame(MemberDto loggedInUser, MemberDto boardUser) {return new BoardFrame(loggedInUser, boardUser, memberService(), articleService());}
     public MemberService memberService(){
       return new MemberService(memberRepository());
    }
@@ -32,4 +34,10 @@ public class AppConfig {
         return new MemberRepository(getDbConnection());
    }
 
+    public ArticleService articleService(){
+        return new ArticleService(articleRepository());
+    }
+    public ArticleRepository articleRepository(){
+        return new ArticleRepository(getDbConnection());
+   }
 }

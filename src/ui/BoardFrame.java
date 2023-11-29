@@ -1,7 +1,9 @@
 package ui;
 
 import config.AppConfig;
+import dto.ArticleDto;
 import dto.MemberDto;
+import service.ArticleService;
 import service.MemberService;
 
 import javax.swing.*;
@@ -12,6 +14,7 @@ public class BoardFrame extends JFrame {
     private MemberDto loginUser;
     private MemberDto boardOwner;
     private MemberService memberService;
+    private ArticleService articleService;
     private GridBagLayout gBag;
 
     // header component
@@ -26,10 +29,21 @@ public class BoardFrame extends JFrame {
     private JLabel boardOwnerLabel;
     private JButton followBtn;
 
-    public BoardFrame(MemberDto loginUser, MemberDto boardOwner, MemberService memberService){
+    // Article component
+    private JPanel articleListPanel;
+    private JScrollPane articleScListroll;
+    private JButton likeBtn;
+
+    // following componentJPanel titlePanel = new JPanel();
+
+    // follower component
+
+    public BoardFrame(MemberDto loginUser, MemberDto boardOwner,
+                      MemberService memberService, ArticleService articleService){
         this.loginUser = loginUser;
         this.boardOwner = boardOwner;
         this.memberService = memberService;
+        this.articleService = articleService;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 300);
@@ -59,6 +73,19 @@ public class BoardFrame extends JFrame {
         gbInsert(profilePanel, 2, 4, 3, 1);
 
         // Article Layout
+        articleListPanel = new JPanel(new BoxLayout(articleListPanel, BoxLayout.Y_AXIS));
+        ArticleDto[] allArticles = articleService.getAllArticles(boardOwner.getId());
+        for(ArticleDto articleDto : allArticles){
+             JPanel titlePanel = new JPanel(new FlowLayout());
+             JLabel title = new JLabel(articleDto.getTitle());
+             JButton addLikeBtn = new JButton("좋아요!");
+
+             JLabel content = new JLabel(articleDto.getContent());
+
+        }
+        // Following Layout
+
+        // Follower Layout
 
 //        boardContainer = getContentPane();
 //        boardContainer.setLayout(new BorderLayout());
