@@ -8,6 +8,8 @@ import ui.BoardFrame;
 import ui.JoinFrame;
 import ui.LoginFrame;
 
+import java.lang.reflect.Member;
+
 import static db.DBConnection.*;
 
 public class AppConfig {
@@ -21,7 +23,7 @@ public class AppConfig {
        return new JoinFrame(memberService());
     }
 
-    public BoardFrame boardFrame(MemberDto memberDto) {return new BoardFrame(memberDto, memberService());}
+    public BoardFrame boardFrame(MemberDto loggedInUser, MemberDto boardUser) {return new BoardFrame(loggedInUser, boardUser, memberService());}
     public MemberService memberService(){
       return new MemberService(memberRepository());
    }

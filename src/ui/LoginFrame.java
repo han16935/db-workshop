@@ -87,7 +87,7 @@ public class LoginFrame extends JFrame{
                 MemberDto loggedInMember = memberService.login(willBeLoggedInMember);
 
                 JOptionPane.showMessageDialog(this, "로그인 성공!", "로그인", JOptionPane.INFORMATION_MESSAGE);
-                new AppConfig().boardFrame(loggedInMember);
+                new AppConfig().boardFrame(loggedInMember, loggedInMember);
                 this.dispose();
             }
 
