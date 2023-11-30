@@ -3,10 +3,7 @@ package repository;
 import db.DBConnection;
 import dto.ArticleDto;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +72,28 @@ public class ArticleRepository {
                 result.add(new ArticleDto(id, ownerId, writerId, content, createdDate));
             }
             return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void addArticle(ArticleDto articleDto) {
+        PreparedStatement pstmt = null;
+        try{
+            String psql = "insert into Article(owner_id, writer_id, content, created_date) " +
+                    "values (?, ?, ?, ?, ?)";
+
+            pstmt = conn.prepareStatement(psql);
+
+            pstmt.setInt(1, articleDto.getOwnerId());
+            pstmt.setInt(2, articleDto.getWriterId());
+            pstmt.setString(3, articleDto.getContent());
+            pstmt.setTimestamp(4, Timestamp.valueOf(articleDto.getCreatedDate()));
+            conn.setAutoCommit(false);
+
+            pstmt.executeUpdate();
+
+            conn.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

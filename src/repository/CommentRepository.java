@@ -51,24 +51,4 @@ public class CommentRepository {
         }
     }
 
-    public boolean getAllFollowRelationShip(int boardOwnerId) {
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        try {
-            String psql = "select * from follow where followed_id = ? or following_id = ?";
-            pstmt = conn.prepareStatement(psql);
-            pstmt.setInt(1, boardOwnerId);
-            pstmt.setInt(2, boardOwnerId);
-
-            rs = pstmt.executeQuery();
-
-            // following한 사람, follower인 사람 둘 다 없을 경우 false
-            if (!rs.next()) return false;
-            else return true;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

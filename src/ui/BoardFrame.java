@@ -8,7 +8,15 @@ import service.MemberService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.sql.*;
+
+
+import java.time.LocalDate;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
 
 public class BoardFrame extends JFrame {
     private MemberDto loginUser;
@@ -33,10 +41,19 @@ public class BoardFrame extends JFrame {
     private JPanel articleListPanel;
     private JScrollPane articleScListroll;
     private JButton likeBtn;
+    private JButton writeBtn;
 
     // following componentJPanel titlePanel = new JPanel();
+    private JLabel followingNum;
+    private JButton followingList;
 
     // follower component
+    private JLabel followerNum;
+    private JButton followerList;
+
+    // time component
+    private JLabel timeLabel;
+    private JLabel dateLabel;
 
     public BoardFrame(MemberDto loginUser, MemberDto boardOwner,
                       MemberService memberService, ArticleService articleService){
@@ -45,34 +62,68 @@ public class BoardFrame extends JFrame {
         this.memberService = memberService;
         this.articleService = articleService;
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 300);
+        JFrame frm = new JFrame("트-위타");
+        frm.setSize(1000,1000);
+        frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frm.getContentPane().setLayout(null);
 
-        gBag = new GridBagLayout();
-        setLayout(gBag);
+        // Time Layout
+
 
         // Header Layout
-        headerPanel = new JPanel(new FlowLayout());
-        loginUserLabel = new JLabel(loginUser.getUserId() + "님 환영합니다!");
-        headerPanel.add(loginUserLabel);
+        JLabel loginUserLabel = new JLabel(loginUser.getUserId() + "님 환영합니다!");
+        loginUserLabel.setBounds(20,170,122,30);
 
-        logoutBtn = new JButton("로그아웃");
-        headerPanel.add(logoutBtn);
+        JButton logoutBtn = new JButton("로그아웃");
+        logoutBtn.setBounds(20,205,122,30);
 
-        changePwBtn = new JButton("비밀번호 변경");
-        headerPanel.add(changePwBtn);
-        gbInsert(headerPanel, 1, 0, 4, 1);
+        JButton changePwBtn = new JButton("비밀번호 변경");
+        changePwBtn.setBounds(20,240,122,30);
 
         // Profile Layout
-        profilePanel = new JPanel(new FlowLayout());
-        boardOwnerLabel = new JLabel(boardOwner.getUserId() + "의 board");
-        profilePanel.add(boardOwnerLabel);
+        JLabel boardOwnerLabel = new JLabel(boardOwner.getUserId() + "의 board");
+        boardOwnerLabel.setBounds(400,130,122,30);
 
-        followBtn = new JButton("Follow");
-        profilePanel.add(followBtn);
-        gbInsert(profilePanel, 2, 4, 3, 1);
+        JButton followBtn = new JButton("Follow");
+        followBtn.setBounds(480,130,122,30);
 
+
+        // articleList Layout
+        JPanel articleListPanel = new JPanel();
+        articleListPanel.setBackground(Color.WHITE);
+        articleListPanel.setBounds(180,180,600,700);
+
+
+        // following Layout
+        JLabel followingNum = new JLabel("팔로잉 : " + "?" + "명");
+        followingNum.setBounds(830,200,122,30);
+
+        JButton followingList = new JButton("팔로잉 목록");
+        followingList.setBounds(830,240,122,30);
+
+        // follower Layout
+        JLabel followerNum = new JLabel("팔로워 : " + "?" + "명");
+        followerNum.setBounds(830,300,122,30);
+
+        JButton followerList = new JButton("팔로워 목록");
+        followerList.setBounds(830,340,122,30);
+
+        // Frame get each Content
+        frm.getContentPane().add(loginUserLabel);
+        frm.getContentPane().add(logoutBtn);
+        frm.getContentPane().add(changePwBtn);
+        frm.getContentPane().add(boardOwnerLabel);
+        frm.getContentPane().add(followBtn);
+        frm.getContentPane().add(articleListPanel);
+        frm.getContentPane().add(followingNum);
+        frm.getContentPane().add(followerNum);
+        frm.getContentPane().add(followingList);
+        frm.getContentPane().add(followerList);
+
+        frm.setVisible(true);
         // Article Layout
+
+
 
         // Following Layout
 
@@ -106,6 +157,7 @@ public class BoardFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "로그아웃 성공!");
             new AppConfig().loginFrame();
             this.dispose();
+            frm.dispose();
         });
 
         changePwBtn.addActionListener(e -> {
@@ -125,16 +177,36 @@ public class BoardFrame extends JFrame {
                 JOptionPane.showMessageDialog(this, ServerErrorException.getMessage());
             }
         });
+
+        followBtn.addActionListener(e->{
+
+        });
+
+        followerList.addActionListener(e -> {
+            JFrame newFrame = new JFrame("팔로워 목록");
+            newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            newFrame.setSize(300, 200);
+            newFrame.setLocationRelativeTo(null);
+            newFrame.setVisible(true);
+            JTextArea followerArea = new JTextArea("",7,20);
+            followerArea.setBounds(830,280,122,30);
+            followerArea.setBackground(Color.GRAY);
+            newFrame.add(followerArea);
+            followerArea.setVisible(true);
+        });
+
+        followingList.addActionListener(e -> {
+            JFrame newFrame = new JFrame("팔로잉 목록");
+            newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            newFrame.setSize(300, 200);
+            newFrame.setLocationRelativeTo(null);
+            newFrame.setVisible(true);
+            JTextArea followingArea = new JTextArea("",7,20);
+            followingArea.setBounds(830,280,122,30);
+            followingArea.setBackground(Color.GRAY);
+            newFrame.add(followingArea);
+            followingArea.setVisible(true);
+        });
     }
-    public void gbInsert(Component c, int x, int y, int w, int h){
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.gridx = x;
-        gbc.gridy = y;
-        gbc.gridwidth = w;
-        gbc.gridheight = h;
-        //gBag.setConstraints(c, gbc);
-        gbc.insets = new Insets(2, 2, 2, 2);
-        add(c, gbc);
-    }
+
 }
