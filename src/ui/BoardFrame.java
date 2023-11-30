@@ -46,15 +46,15 @@ public class BoardFrame extends JFrame {
     // following componentJPanel titlePanel = new JPanel();
     private JLabel followingNum;
     private JButton followingList;
-
+    
     // follower component
     private JLabel followerNum;
     private JButton followerList;
-
+    
     // time component
     private JLabel timeLabel;
     private JLabel dateLabel;
-
+    
     public BoardFrame(MemberDto loginUser, MemberDto boardOwner,
                       MemberService memberService, ArticleService articleService){
         this.loginUser = loginUser;
@@ -66,7 +66,7 @@ public class BoardFrame extends JFrame {
         frm.setSize(1000,1000);
         frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frm.getContentPane().setLayout(null);
-
+        
         // Time Layout
 
 
@@ -76,38 +76,38 @@ public class BoardFrame extends JFrame {
 
         JButton logoutBtn = new JButton("로그아웃");
         logoutBtn.setBounds(20,205,122,30);
-
+        
         JButton changePwBtn = new JButton("비밀번호 변경");
         changePwBtn.setBounds(20,240,122,30);
-
+        
         // Profile Layout
         JLabel boardOwnerLabel = new JLabel(boardOwner.getUserId() + "의 board");
         boardOwnerLabel.setBounds(400,130,122,30);
-
+        
         JButton followBtn = new JButton("Follow");
         followBtn.setBounds(480,130,122,30);
-
-
+        
+        
         // articleList Layout
         JPanel articleListPanel = new JPanel();
         articleListPanel.setBackground(Color.WHITE);
         articleListPanel.setBounds(180,180,600,700);
-
-
+        
+        
         // following Layout
         JLabel followingNum = new JLabel("팔로잉 : " + "?" + "명");
         followingNum.setBounds(830,200,122,30);
-
+        
         JButton followingList = new JButton("팔로잉 목록");
         followingList.setBounds(830,240,122,30);
-
+        
         // follower Layout
         JLabel followerNum = new JLabel("팔로워 : " + "?" + "명");
         followerNum.setBounds(830,300,122,30);
-
+        
         JButton followerList = new JButton("팔로워 목록");
         followerList.setBounds(830,340,122,30);
-
+        
         // Frame get each Content
         frm.getContentPane().add(loginUserLabel);
         frm.getContentPane().add(logoutBtn);
@@ -119,12 +119,12 @@ public class BoardFrame extends JFrame {
         frm.getContentPane().add(followerNum);
         frm.getContentPane().add(followingList);
         frm.getContentPane().add(followerList);
-
+        
         frm.setVisible(true);
         // Article Layout
 
-
-
+        
+        
         // Following Layout
 
         // Follower Layout
@@ -152,11 +152,11 @@ public class BoardFrame extends JFrame {
         setTitle("트-위타");
         setResizable(false);
         setVisible(true);
+        this.dispose();
 
         logoutBtn.addActionListener(e -> {
             JOptionPane.showMessageDialog(this, "로그아웃 성공!");
             new AppConfig().loginFrame();
-            this.dispose();
             frm.dispose();
         });
 
@@ -177,11 +177,7 @@ public class BoardFrame extends JFrame {
                 JOptionPane.showMessageDialog(this, ServerErrorException.getMessage());
             }
         });
-
-        followBtn.addActionListener(e->{
-
-        });
-
+        
         followerList.addActionListener(e -> {
             JFrame newFrame = new JFrame("팔로워 목록");
             newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -189,12 +185,13 @@ public class BoardFrame extends JFrame {
             newFrame.setLocationRelativeTo(null);
             newFrame.setVisible(true);
             JTextArea followerArea = new JTextArea("",7,20);
+            followerArea.setEnabled(false);
             followerArea.setBounds(830,280,122,30);
             followerArea.setBackground(Color.GRAY);
             newFrame.add(followerArea);
-            followerArea.setVisible(true);
+        	followerArea.setVisible(true);
         });
-
+        
         followingList.addActionListener(e -> {
             JFrame newFrame = new JFrame("팔로잉 목록");
             newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -202,11 +199,12 @@ public class BoardFrame extends JFrame {
             newFrame.setLocationRelativeTo(null);
             newFrame.setVisible(true);
             JTextArea followingArea = new JTextArea("",7,20);
+            followingArea.setEnabled(false);
             followingArea.setBounds(830,280,122,30);
             followingArea.setBackground(Color.GRAY);
             newFrame.add(followingArea);
-            followingArea.setVisible(true);
+        	followingArea.setVisible(true);
         });
     }
-
+    
 }
