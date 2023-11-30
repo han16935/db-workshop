@@ -4,8 +4,10 @@ import db.DBConnection;
 import dto.MemberDto;
 import repository.ArticleRepository;
 import repository.CommentRepository;
+import repository.FollowRepository;
 import repository.MemberRepository;
 import service.ArticleService;
+import service.FollowService;
 import service.MemberService;
 import ui.BoardFrame;
 import ui.JoinFrame;
@@ -36,8 +38,15 @@ public class AppConfig {
    }
 
     public ArticleService articleService(){
-        return new ArticleService(articleRepository(), commentRepository());
+        return new ArticleService(articleRepository(), commentRepository(), followRepository());
     }
     public ArticleRepository articleRepository(){return new ArticleRepository(getDbConnection());}
     public CommentRepository commentRepository(){return new CommentRepository(getDbConnection());}
+
+    public FollowService followService(){
+        return new FollowService(followRepository());
+    }
+    public FollowRepository followRepository(){return new FollowRepository(getDbConnection());}
+
+
 }
