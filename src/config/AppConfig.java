@@ -28,7 +28,9 @@ public class AppConfig {
        return new JoinFrame(memberService());
     }
 
-    public BoardFrame boardFrame(MemberDto loggedInUser, MemberDto boardUser) {return new BoardFrame(loggedInUser, boardUser, memberService(), articleService());}
+    public BoardFrame boardFrame(MemberDto loggedInUser, MemberDto boardOwner) {
+        return new BoardFrame(loggedInUser, boardOwner, memberService(), articleService(), followService());
+    }
     public MemberService memberService(){
       return new MemberService(memberRepository());
    }

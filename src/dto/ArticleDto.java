@@ -18,6 +18,13 @@ public class ArticleDto {
         this.content = content;
         this.createdDate = createdDate;
     }
+    public ArticleDto(int ownerId, int writerId, String content, LocalDateTime createdDate){
+        this.ownerId = ownerId;
+        this.writerId = writerId;
+        this.content = content;
+        this.createdDate = createdDate;
+    }
+
     public int getId() {
         return id;
     }

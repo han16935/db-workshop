@@ -81,7 +81,7 @@ public class ArticleRepository {
         PreparedStatement pstmt = null;
         try{
             String psql = "insert into Article(owner_id, writer_id, content, created_date) " +
-                    "values (?, ?, ?, ?, ?)";
+                    "values (?, ?, ?, ?)";
 
             pstmt = conn.prepareStatement(psql);
 
