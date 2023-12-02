@@ -4,6 +4,8 @@ import config.AppConfig;
 import dto.ArticleDto;
 import dto.MemberDto;
 import service.ArticleService;
+import service.CommentService;
+import service.FollowService;
 import service.MemberService;
 
 import javax.swing.*;
@@ -19,10 +21,14 @@ import java.text.SimpleDateFormat;
 
 
 public class BoardFrame extends JFrame {
+
+    private final CommentService commentService;
+    // Backend Component
     private MemberDto loginUser;
     private MemberDto boardOwner;
     private MemberService memberService;
     private ArticleService articleService;
+    private FollowService followService;
     private GridBagLayout gBag;
 
     // header component
@@ -56,11 +62,13 @@ public class BoardFrame extends JFrame {
     private JLabel dateLabel;
     
     public BoardFrame(MemberDto loginUser, MemberDto boardOwner,
-                      MemberService memberService, ArticleService articleService){
+                      MemberService memberService, ArticleService articleService, CommentService commentService, FollowService followService){
         this.loginUser = loginUser;
         this.boardOwner = boardOwner;
         this.memberService = memberService;
         this.articleService = articleService;
+        this.commentService = commentService;
+        this.followService = followService;
 
         JFrame frm = new JFrame("트-위타");
         frm.setSize(1000,1000);

@@ -17,6 +17,13 @@ public class CommentDto {
         this.content = content;
     }
 
+    public CommentDto(int articleId, int writerId, LocalDateTime createdDate, String content) {
+        this.articleId = articleId;
+        this.writerId = writerId;
+        this.createdDate = createdDate;
+        this.content = content;
+    }
+
     public int getId() {
         return id;
     }

@@ -6,10 +6,7 @@ import dto.CommentDto;
 import dto.MemberDto;
 import exception.memberException.LoginFailException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,4 +48,25 @@ public class CommentRepository {
         }
     }
 
+    public void addComment(CommentDto commentDto){
+        PreparedStatement pstmt = null;
+        try{
+            String psql = "insert into Comment(article_id, writer_id, created_date, content) " +
+                    "values (?, ?, ?, ?)";
+
+            pstmt = conn.prepareStatement(psql);
+
+            pstmt.setInt(1, commentDto.getArticleId());
+            pstmt.setInt(2, commentDto.getWriterId());
+            pstmt.setTimestamp(3, Timestamp.valueOf(commentDto.getCreatedDate()));
+            pstmt.setString(4, commentDto.getContent());
+            conn.setAutoCommit(false);
+
+            pstmt.executeUpdate();
+
+            conn.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
