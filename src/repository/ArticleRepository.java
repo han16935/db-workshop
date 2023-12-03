@@ -22,10 +22,16 @@ public class ArticleRepository {
         ResultSet rs = null;
         List<ArticleDto> result = new ArrayList<>();
         try{
-            String psql = "select Article.id, Article.owner_id, Article.writer_id, Article.content, Article.created_date "
-                    + "from Article join follow "
-                    + "where Article.owner_id = ? or follow.following_id = ? or follow.followed_id = ? "
-                    + "order by Article.created_date DESC";
+            String psql = "SELECT * FROM article WHERE owner_id = ? " +
+                    "UNION " +
+                    "SELECT article.* FROM article " +
+                    "INNER JOIN follow ON article.owner_id = follow.following_id " +
+                    "WHERE follow.followed_id = ? " +
+                    "UNION " +
+                    "SELECT article.* FROM article " +
+                    "INNER JOIN follow ON article.owner_id = follow.followed_id " +
+                    "WHERE follow.following_id = ? " +
+                    "ORDER BY created_date DESC";
 
             pstmt = conn.prepareStatement(psql);
             pstmt.setInt(1, boardOwnerId);
@@ -40,8 +46,9 @@ public class ArticleRepository {
                int writerId = rs.getInt(3);
                String content = rs.getString(4);
                LocalDateTime createdDate = rs.getTimestamp(5).toLocalDateTime();
+               String filePath = rs.getString(6);
 
-               result.add(new ArticleDto(id, ownerId, writerId, content, createdDate));
+               result.add(new ArticleDto(id, ownerId, writerId, content, createdDate, filePath));
             }
             return result;
         } catch (SQLException e) {
@@ -54,8 +61,8 @@ public class ArticleRepository {
         ResultSet rs = null;
         List<ArticleDto> result = new ArrayList<>();
         try{
-            String psql = "select Article.id, Article.owner_id, Article.writer_id, Article.content, Article.created_date "
-                    + "from Article where Article.owner_id = ? order by Article.created_date DESC";
+            String psql = "select * from Article" +
+                          " where Article.owner_id = ? order by Article.created_date DESC";
 
             pstmt = conn.prepareStatement(psql);
             pstmt.setInt(1, boardOwnerId);
@@ -68,8 +75,9 @@ public class ArticleRepository {
                 int writerId = rs.getInt(3);
                 String content = rs.getString(4);
                 LocalDateTime createdDate = rs.getTimestamp(5).toLocalDateTime();
+                String filePath = rs.getString(6);
 
-                result.add(new ArticleDto(id, ownerId, writerId, content, createdDate));
+                result.add(new ArticleDto(id, ownerId, writerId, content, createdDate, filePath));
             }
             return result;
         } catch (SQLException e) {

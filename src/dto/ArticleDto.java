@@ -16,12 +16,13 @@ public class ArticleDto {
     private LocalDateTime createdDate;
     private List<CommentDto> comments;
 
-    public ArticleDto(int id, int ownerId, int writerId, String content, LocalDateTime createdDate) {
+    public ArticleDto(int id, int ownerId, int writerId, String content, LocalDateTime createdDate, String filePath) {
         this.id = id;
         this.ownerId = ownerId;
         this.writerId = writerId;
         this.content = content;
         this.createdDate = createdDate;
+        this.filePath = filePath;
     }
 
     public ArticleDto(int ownerId, int writerId, String content, LocalDateTime createdDate, String filePath){
@@ -73,6 +74,7 @@ public class ArticleDto {
                 ", ownerId=" + ownerId +
                 ", writerId=" + writerId +
                 ", content='" + content + '\'' +
+                ", filePath='" + filePath + '\'' +
                 ", createdDate=" + createdDate +
                 ", comments=" + comments +
                 '}';
