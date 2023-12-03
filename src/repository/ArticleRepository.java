@@ -98,4 +98,27 @@ public class ArticleRepository {
             throw new RuntimeException(e);
         }
     }
+
+    public void addArticleWithImage(ArticleDto articleDto) {
+        PreparedStatement pstmt = null;
+        try{
+            String psql = "insert into Article(owner_id, writer_id, content, created_date, image) " +
+                    "values (?, ?, ?, ?, ?)";
+
+            pstmt = conn.prepareStatement(psql);
+
+            pstmt.setInt(1, articleDto.getOwnerId());
+            pstmt.setInt(2, articleDto.getWriterId());
+            pstmt.setString(3, articleDto.getContent());
+            pstmt.setTimestamp(4, Timestamp.valueOf(articleDto.getCreatedDate()));
+            pstmt.setString(5, articleDto.getFilePath());
+            conn.setAutoCommit(false);
+
+            pstmt.executeUpdate();
+
+            conn.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

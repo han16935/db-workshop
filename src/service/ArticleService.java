@@ -5,7 +5,12 @@ import repository.ArticleRepository;
 import repository.CommentRepository;
 import repository.FollowRepository;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 public class ArticleService {
     private ArticleRepository articleRepository;
@@ -31,6 +36,18 @@ public class ArticleService {
     // article 추가, articleDto에는
     // ownerId, writerId, content, createdDate 담겨 있어야
     public void addArticle(ArticleDto articleDto){
-       articleRepository.addArticle(articleDto);
+        if(articleDto.getFilePath() != null){
+            String uuid = UUID.randomUUID().toString();
+            String newPath = "C:\\Users\\han16\\Desktop\\Photo\\" + uuid + articleDto.getFilePath().substring(articleDto.getFilePath().lastIndexOf('.'));
+            File photo = new File(articleDto.getFilePath());
+            try {
+                Files.move(Paths.get(articleDto.getFilePath()), Paths.get(newPath));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            articleRepository.addArticleWithImage(new ArticleDto(articleDto.getOwnerId(), articleDto.getWriterId(), articleDto.getContent(),
+                    articleDto.getCreatedDate(), newPath));
+        }
+        else articleRepository.addArticle(articleDto);
     }
 }

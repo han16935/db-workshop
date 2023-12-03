@@ -299,6 +299,8 @@ public class BoardFrame extends JFrame {
                 else{
                     if(uploadedPhotoPath[0] != null) articleService.addArticle(new ArticleDto(loginUser.getId(), boardOwner.getId(), contentField.getText(), LocalDateTime.now(), uploadedPhotoPath[0]));
                     else articleService.addArticle(new ArticleDto(loginUser.getId(), boardOwner.getId(), contentField.getText(), LocalDateTime.now()));
+                    JOptionPane.showMessageDialog(articleWriteModal, "업로드 완료!");
+                    articleWriteModal.dispose();
                     frm.dispose();
                     new AppConfig().boardFrame(loginUser, boardOwner);
                 }

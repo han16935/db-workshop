@@ -10,6 +10,9 @@ public class ArticleDto {
     private String content;
 
     private String filePath;
+
+
+
     private LocalDateTime createdDate;
     private List<CommentDto> comments;
 
@@ -56,6 +59,9 @@ public class ArticleDto {
         return createdDate;
     }
 
+    public String getFilePath() {
+        return filePath;
+    }
     public void addComments(List<CommentDto> comments) {
         this.comments = comments;
     }
