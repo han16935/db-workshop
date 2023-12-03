@@ -8,16 +8,17 @@ import service.CommentService;
 import service.FollowService;
 import service.MemberService;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
-import java.sql.*;
 
 
-import java.time.LocalDate;
-import java.util.Date;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 public class BoardFrame extends JFrame {
@@ -47,7 +48,7 @@ public class BoardFrame extends JFrame {
     private JPanel articleListPanel;
     private JScrollPane articleScListroll;
     private JButton likeBtn;
-    private JButton writeBtn;
+    private JButton articleWriteBtn;
 
     // following componentJPanel titlePanel = new JPanel();
     private JLabel followingNum;
@@ -60,6 +61,7 @@ public class BoardFrame extends JFrame {
     // time component
     private JLabel timeLabel;
     private JLabel dateLabel;
+
     
     public BoardFrame(MemberDto loginUser, MemberDto boardOwner,
                       MemberService memberService, ArticleService articleService, CommentService commentService, FollowService followService){
@@ -99,8 +101,10 @@ public class BoardFrame extends JFrame {
         // articleList Layout
         JPanel articleListPanel = new JPanel();
         articleListPanel.setBackground(Color.WHITE);
-        articleListPanel.setBounds(180,180,600,700);
-        
+        articleListPanel.setBounds(180,180,600,400);
+
+        articleWriteBtn = new JButton("글쓰기");
+        articleWriteBtn.setBounds(180, 600, 122, 30);
         
         // following Layout
         JLabel followingNum = new JLabel("팔로잉 : " + "?" + "명");
@@ -127,6 +131,7 @@ public class BoardFrame extends JFrame {
         frm.getContentPane().add(followerNum);
         frm.getContentPane().add(followingList);
         frm.getContentPane().add(followerList);
+        frm.getContentPane().add(articleWriteBtn);
         
         frm.setVisible(true);
         // Article Layout
@@ -212,6 +217,92 @@ public class BoardFrame extends JFrame {
             followingArea.setBackground(Color.GRAY);
             newFrame.add(followingArea);
         	followingArea.setVisible(true);
+        });
+
+        articleWriteBtn.addActionListener(e->{
+            final File[] photo = new File[1];
+            final String[] uploadedPhotoPath = new String[1];
+
+            JFrame articleWriteModal = new JFrame();
+            articleWriteModal.setTitle("게시글 작성");
+            articleWriteModal.setSize(700, 500);
+            articleWriteModal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            articleWriteModal.setLayout(new GridLayout(3, 1, 20, 20));
+
+            JLabel contentLabel = new JLabel("내용 작성");
+            contentLabel.setHorizontalAlignment(JLabel.CENTER);
+
+            JPanel contentPanel = new JPanel();
+            contentPanel.setLayout(new GridLayout(1, 2));
+
+            JTextArea contentField = new JTextArea(7, 20);
+            contentPanel.add(new JScrollPane(contentField)); // Use JScrollPane to allow scrolling
+
+            JPanel btnPanel = new JPanel();
+            btnPanel.setLayout(new FlowLayout());
+            JButton writeArticleBtn = new JButton("작성");
+            JButton uploadPhotoBtn = new JButton("업로드");
+            btnPanel.add(writeArticleBtn);
+            btnPanel.add(uploadPhotoBtn);
+
+            articleWriteModal.add(contentLabel);
+            articleWriteModal.add(contentPanel);
+            articleWriteModal.add(btnPanel);
+
+            articleWriteModal.setVisible(true);
+
+            uploadPhotoBtn.addActionListener(uploadBtnEvent -> {
+                if(uploadedPhotoPath[0] == null){
+                    JFileChooser chooser = new JFileChooser();
+                    chooser.showOpenDialog(null);
+                    photo[0] = chooser.getSelectedFile();
+                    uploadedPhotoPath[0] = photo[0].getAbsolutePath();
+                    System.out.println(uploadedPhotoPath[0]);
+
+                    try {
+                        // Read the image
+                        BufferedImage originalImage = ImageIO.read(new File(uploadedPhotoPath[0]));
+
+                        // Resize the image to fit within a reasonable size
+                        int maxImageSize = 300; // Adjust this size according to your needs
+                        int width = originalImage.getWidth();
+                        int height = originalImage.getHeight();
+
+                        if (width > maxImageSize || height > maxImageSize) {
+                            double scale = Math.min((double) maxImageSize / width, (double) maxImageSize / height);
+                            int newWidth = (int) (width * scale);
+                            int newHeight = (int) (height * scale);
+                            Image resizedImage = originalImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+                            originalImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+                            Graphics2D g2d = originalImage.createGraphics();
+                            g2d.drawImage(resizedImage, 0, 0, null);
+                            g2d.dispose();
+                        }
+
+                        // Display the resized image
+                        JLabel imgLabel = new JLabel(new ImageIcon(originalImage));
+                        JScrollPane imgScrollPane = new JScrollPane(imgLabel);
+                        contentPanel.add(imgScrollPane);
+                        contentPanel.revalidate();
+                        contentPanel.repaint();
+
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+
+                else JOptionPane.showMessageDialog(articleWriteModal,"하나의 이미지만 업로드할 수 있습니다!");
+            });
+
+            writeArticleBtn.addActionListener(writeArticleBtnEvent->{
+                if(contentField.getText().isEmpty()) JOptionPane.showMessageDialog(articleWriteModal,"내용을 입력해주세요!");
+                else{
+                    if(uploadedPhotoPath[0] != null) articleService.addArticle(new ArticleDto(loginUser.getId(), boardOwner.getId(), contentField.getText(), LocalDateTime.now(), uploadedPhotoPath[0]));
+                    else articleService.addArticle(new ArticleDto(loginUser.getId(), boardOwner.getId(), contentField.getText(), LocalDateTime.now()));
+                    frm.dispose();
+                    new AppConfig().boardFrame(loginUser, boardOwner);
+                }
+            });
         });
     }
     

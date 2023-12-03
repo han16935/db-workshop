@@ -8,6 +8,8 @@ public class ArticleDto {
     private int ownerId;
     private int writerId;
     private String content;
+
+    private String filePath;
     private LocalDateTime createdDate;
     private List<CommentDto> comments;
 
@@ -18,6 +20,15 @@ public class ArticleDto {
         this.content = content;
         this.createdDate = createdDate;
     }
+
+    public ArticleDto(int ownerId, int writerId, String content, LocalDateTime createdDate, String filePath){
+        this.ownerId = ownerId;
+        this.writerId = writerId;
+        this.content = content;
+        this.createdDate = createdDate;
+        this.filePath = filePath;
+    }
+
     public ArticleDto(int ownerId, int writerId, String content, LocalDateTime createdDate){
         this.ownerId = ownerId;
         this.writerId = writerId;
