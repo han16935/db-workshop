@@ -69,4 +69,43 @@ public class CommentRepository {
             throw new RuntimeException(e);
         }
     }
+
+    // new added
+    public List<CommentDto> getAllComments() {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<CommentDto> comments = new ArrayList<>();
+
+        try {
+            String psql = "select * from comment ORDER BY created_date desc";
+            pstmt = conn.prepareStatement(psql);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                int articleId = rs.getInt(2);
+                int writerId = rs.getInt(3);
+                LocalDateTime createdDate = rs.getTimestamp(4).toLocalDateTime();
+                String content = rs.getString(5);
+
+                comments.add(new CommentDto(id, articleId, writerId, createdDate, content));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            // Close the result set and statement
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return comments;
+    }
 }

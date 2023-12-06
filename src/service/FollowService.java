@@ -21,15 +21,18 @@ public class FollowService {
         return followRepository.getAllFollowings(ownerId);
     }
 
+    // followingId가 followedId 팔로했는지 확인
+    // 뒷부분 멤버가 앞부분 멤버 팔로했는지 확인
     public boolean hasFollowRelationship(int followedId, int followingId){
         return followRepository.hasFollowRelationship(followedId, followingId);
     }
 
     // followLoginUser가 loginUser 팔로하려고 함
-    public void addFollower(int loginUserId, int followLoginUserId) throws DuplicateFollowRelationshipException {
-        if(!hasFollowRelationship(loginUserId, followLoginUserId))
+    // 앞 멤버가 뒤 멤버 팔로하려고 함
+    public void addFollower(int loginUserId, int followedByLoginUserId) throws DuplicateFollowRelationshipException {
+        if(!hasFollowRelationship(loginUserId, followedByLoginUserId))
             throw new DuplicateFollowRelationshipException("이미 팔로하셨습니다!");
-        else followRepository.addFollower(loginUserId, followLoginUserId);
+        followRepository.addFollower(loginUserId, followedByLoginUserId);
     }
 
     // loginUser가 followedByLoginUser 팔로하려고 함

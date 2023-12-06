@@ -56,8 +56,8 @@ public class FollowRepository {
             rs = pstmt.executeQuery();
 
             // 이미 해당 관계 있을 경우
-            if(rs.next()) return false;
-            else return true;
+            if(rs.next()) return true;
+            else return false;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -119,15 +119,16 @@ public class FollowRepository {
     }
 
     // loginUser의 follower 추가
-    public void addFollower(int loginUserId, int followLoginUserId){
+    // 앞 멤버가 뒤 멤버 팔로하려고 함
+    public void addFollower(int loginUserId, int followedByLoginUserId){
         PreparedStatement pstmt = null;
         try{
             String psql = "insert into follow(followed_id, following_id)" +
                     " values (?, ?)";
 
             pstmt = conn.prepareStatement(psql);
-            pstmt.setInt(1, loginUserId);
-            pstmt.setInt(2, followLoginUserId);
+            pstmt.setInt(1, followedByLoginUserId);
+            pstmt.setInt(2, loginUserId);
             conn.setAutoCommit(false);
 
             pstmt.executeUpdate();
